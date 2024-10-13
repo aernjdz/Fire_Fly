@@ -1,70 +1,131 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, Image, SafeAreaView, Platform, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
+import BackgroundWithLogo from '../gradient';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export default function HomeScreen() {
+  const [scaleAnim] = useState(new Animated.Value(1));
+
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.95,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      friction: 3,
+      tension: 40,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <SafeAreaView style={styles.container}>
+      <BackgroundWithLogo />
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Світло</Text>
+        <View style={styles.headerIcons}>
+          <TouchableOpacity style={styles.iconButton}>
+            <Ionicons name="add-outline" size={24} color="white" />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.content}>
+        <BlurView intensity={80} tint="dark" style={styles.card}>
+          <Text style={styles.cardTitle}>Сьогодні</Text>
+          <Text style={styles.cardSubTitle}>Відключення скасовано!</Text>
+          <Text style={styles.cardDescription}>Насолоджуйтесь яскравим днем 🌞</Text>
+        </BlurView>
+        <TouchableOpacity
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
+          activeOpacity={1}
+        >
+          <AnimatedBlurView
+            intensity={80}
+            tint="dark"
+            style={[
+              styles.addLocation,
+              { transform: [{ scale: scaleAnim }] }
+            ]}
+          >
+            <Image source={require("../../assets/images/plus.png")} style={styles.locationImage}/>
+            <Text style={styles.addLocationText}>Додайте першу локацію</Text>
+          </AnimatedBlurView>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    paddingHorizontal: 16,
+    paddingTop: Platform.OS === 'android' ? 40 : 16,
+    paddingBottom: 16,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  headerTitle: {
+    color: "#ffffff",
+    fontSize: 20,
+    fontWeight: 'bold',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  headerIcons: {
+    flexDirection: 'row',
+  },
+  iconButton: {
+    marginLeft: 20,
+  },
+  content: {
+    flex: 1,
+    padding: 16
+  },
+  card: {
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  cardTitle: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+  cardSubTitle: {
+    fontSize: 16,
+    marginTop: 2,
+    color: "#ffffff",
+  },
+  cardDescription: {
+    marginTop: 2,
+    color: "#808080"
+  },
+  addLocation: {
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  locationImage: {
+    width: 60,
+    height: 60,
+    marginBottom: 6,
+  },
+  addLocationText: {
+    color: 'white',
+    marginTop: 8,
   },
 });
