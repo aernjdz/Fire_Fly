@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import { 
-  StyleSheet, 
-  View, 
-  Text, 
-  TouchableOpacity, 
-  Image, 
-  SafeAreaView, 
-  Platform, 
-  Animated, 
-  Modal 
-} from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image, SafeAreaView, Platform, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import BackgroundWithLogo from '../gradient';
@@ -18,8 +8,6 @@ const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
 export default function HomeScreen() {
   const [scaleAnim] = useState(new Animated.Value(1));
-  const [isModalVisible, setModalVisible] = useState(false);
-  const [fadeAnim] = useState(new Animated.Value(0));
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
@@ -37,28 +25,11 @@ export default function HomeScreen() {
     }).start();
   };
 
-  const openModal = () => {
-    setModalVisible(true);
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const closeModal = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => setModalVisible(false));
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <BackgroundWithLogo />
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Firefly</Text>
+        <Text style={styles.headerTitle}>Світло</Text>
         <View style={styles.headerIcons}>
           <TouchableOpacity style={styles.iconButton}>
             <Ionicons name="add-outline" size={24} color="white" />
@@ -66,10 +37,14 @@ export default function HomeScreen() {
         </View>
       </View>
       <View style={styles.content}>
+        {/*<BlurView intensity={80} tint="dark" style={styles.card}>
+          <Text style={styles.cardTitle}>Сьогодні</Text>
+          <Text style={styles.cardSubTitle}>Відключення скасовано!</Text>
+          <Text style={styles.cardDescription}>Насолоджуйтесь яскравим днем 🌞</Text>
+        </BlurView>*/}
         <TouchableOpacity
           onPressIn={handlePressIn}
           onPressOut={handlePressOut}
-          onPress={openModal}
           activeOpacity={1}
         >
           <AnimatedBlurView
@@ -85,20 +60,6 @@ export default function HomeScreen() {
           </AnimatedBlurView>
         </TouchableOpacity>
       </View>
-
-      <Modal visible={isModalVisible} transparent animationType="none">
-        <Animated.View style={[styles.modalBackground, { opacity: fadeAnim }]}>
-          <BlurView intensity={80} tint="dark" style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Додати Локацію</Text>
-              <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
-                <Ionicons name="close" size={28} color="white" />
-              </TouchableOpacity>
-            </View>
-          </BlurView>
-        </Animated.View>
-      </Modal>
-
     </SafeAreaView>
   );
 }
@@ -129,7 +90,27 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    padding: 16
+  },
+  card: {
+    borderRadius: 12,
     padding: 16,
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  cardTitle: {
+    color: "#ffffff",
+    fontSize: 18,
+    fontWeight: "bold"
+  },
+  cardSubTitle: {
+    fontSize: 16,
+    marginTop: 2,
+    color: "#ffffff",
+  },
+  cardDescription: {
+    marginTop: 2,
+    color: "#808080"
   },
   addLocation: {
     borderRadius: 12,
@@ -147,34 +128,5 @@ const styles = StyleSheet.create({
     color: 'white',
     marginTop: 8,
     textAlign: "center",
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: '90%',
-    borderRadius: 16,
-    padding: 16,
-    alignItems: 'center', 
-  },
-  modalHeader: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-  },
-  modalTitle: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  closeButton: {
-    position: 'absolute', // Stay in the top-right corner
-    padding: 4,
-    right: 0
   },
 });
