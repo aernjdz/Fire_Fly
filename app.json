@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Fire Fly",
-    "slug": "Fire Fly",
+    "name": "FireFly",
+    "slug": "FireFly",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -13,7 +13,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.BytesUnion.FireFly"
     },
     "android": {
       "adaptiveIcon": {
@@ -32,6 +33,11 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "97d4a70c-584d-4455-918e-0870e8a2b66e"
+      }
     }
   }
 }

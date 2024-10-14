@@ -71,10 +71,12 @@ export default function HomeScreen() {
           onPressOut={handlePressOut}
           onPress={openModal}
           activeOpacity={1}
+          
         >
           <AnimatedBlurView
             intensity={80}
             tint="dark"
+          
             style={[
               styles.addLocation,
               { transform: [{ scale: scaleAnim }] }
@@ -132,6 +134,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   addLocation: {
+
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
